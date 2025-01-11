@@ -1,3 +1,6 @@
-**Linux_for_Tegra/
+**Linux_for_Tegra
 orin_nano_l4t.tbz2
 orin_nano_rootfs.tbz2
+**datasets
+**.ipynb_checkpoints
+**.cache
