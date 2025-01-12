@@ -15,13 +15,13 @@ This tool is only tested on Ubuntu 22.04 or newer.
 * Make a copy of the release yaml, and edit username and password.
   * Example: `cp r3640.yaml myconfig.yaml`
 * Setup the rootfs and SDK with `nano-cli.py`
-  * `python nano-cli.sh --download --rootfs --config myconfig.yaml`
+  * `bash nano-cli.sh --download --rootfs --config myconfig.yaml`
 * Install a blank SD card and blank NVME ssd to the board. Disconnect display and any peripherals on the USB-A ports.
 * Put the board into forced recovery and connect its USB-C port to the host.
 * Check that `0955:7523 NVIDIA Corp. APX` appears, with `lsusb`
 * Disconnect the jumper used to put the board into forced recovery mode.
 * Flash the board.
-  * `python nano-cli.sh --flash --config myconfig.yaml`
+  * `bash nano-cli.sh --flash --config myconfig.yaml`
 
 # Troubleshooting
 Flashing the devkit can be kind of finicky, here are some workarounds for issues I've encountered.

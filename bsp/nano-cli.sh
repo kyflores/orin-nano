@@ -24,7 +24,7 @@ do_rootfs() {
     tar xvf orin_nano_l4t.tbz2
 
     mkdir -p Linux_for_Tegra/rootfs/
-    sudo tar -xjpfv orin_nano_rootfs.tbz2 -C Linux_for_Tegra/rootfs/
+    sudo tar -xjpf orin_nano_rootfs.tbz2 -C Linux_for_Tegra/rootfs/ -v
 
     pushd Linux_for_Tegra/
     sudo bash apply_binaries.sh
