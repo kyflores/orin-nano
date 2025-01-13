@@ -4,3 +4,5 @@ orin_nano_rootfs.tbz2
 **datasets
 **.ipynb_checkpoints
 **.cache
+
+**.pyc
