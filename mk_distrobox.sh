@@ -10,9 +10,11 @@ else
     IMAGE=nvcr.io/nvidia/pytorch:24.12-py3
 fi
 
+# TODO /var/tmp/.${USER}.passwd.initialize doesn't clear correctly
+# on the orin nano using distrobox?
 distrobox create \
     --name nvtorch \
     --hostname nvtorch \
     --image ${IMAGE} \
-    -a "--runtime nvidia --ulimit memlock=-1 --ulimit stack=67108864" 
+    -a "--runtime nvidia --ulimit memlock=-1 --ulimit stack=67108864"
 

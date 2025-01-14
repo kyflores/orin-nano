@@ -1,4 +1,4 @@
-#!/bin/bash
+# !/bin/bash
 # Docker container for my experiments.
 # Since most interesting things for the nanoneed pytorch and/or tensorrt,
 # this pytorch container is a good start.

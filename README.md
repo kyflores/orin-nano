@@ -1,4 +1,4 @@
-# orin-nano
+# orin-nano-support
 Scripts and code to support the Orin Nano Developer kit
 
 # NVIDIA Jetson Linux
