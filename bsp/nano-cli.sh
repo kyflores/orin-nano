@@ -1,19 +1,19 @@
 #!/bin/bash
 
-sha256() {
-    printf '%s %s\n' "$1" "$2" | sha256sum --check
+sha1() {
+    printf '%s %s\n' "$1" "$2" | sha1sum --check
 }
 
 do_download() {
     wget "$ROOTFS_URL" -O "orin_nano_rootfs.tbz2" --trust-server-names
     wget "$L4T_URL" -O "orin_nano_l4t.tbz2" --trust-server-names
 
-    sha256 $ROOTFS_CHECKSUM orin_nano_rootfs.tbz2
+    sha1 $ROOTFS_CHECKSUM orin_nano_rootfs.tbz2
     if [ $? -ne 0 ]; then
         echo "Rootfs checksum failed"; exit 1
     fi
 
-    sha256 $L4T_CHECKSUM orin_nano_l4t.tbz2
+    sha1 $L4T_CHECKSUM orin_nano_l4t.tbz2
     if [ $? -ne 0 ]; then
         echo "L4T checksum failed"; exit 1
     fi
@@ -29,6 +29,9 @@ do_rootfs() {
     pushd Linux_for_Tegra/
     sudo bash apply_binaries.sh
 
+    printf "Installing host dependencies required for initrd flash"
+    sudo bash tools/l4t_flash_prerequisites.sh
+
     sudo bash tools/l4t_create_default_user.sh \
         -u "${FLASH_USERNAME}" \
         -p "${FLASH_PASSWORD}" \
@@ -41,9 +44,7 @@ do_flash_sh() {
     pushd Linux_for_Tegra
     # NVME flash is simplified for orin nano devkit. See:
     # https://docs.nvidia.com/jetson/archives/r36.4/DeveloperGuide/SD/FlashingSupport.html#using-flash-sh-with-orin-nx-and-nano
-    # This works but doesn't offer the MAXN mode right now.
-    # MAXN can be added by copying "nvpmodel_p3767_0003_super.conf" from the new Super SD card image, then symlinking /etc/nvpmodel.conf to it.
-    sudo bash /flash.sh jetson-orin-nano-devkit-nvme internal
+    sudo bash ./flash.sh jetson-orin-nano-devkit-super-nvme internal
 
     popd
 }
@@ -51,16 +52,13 @@ do_flash_sh() {
 do_flash_nvme() {
     pushd Linux_for_Tegra
 
-    # TODO doesn't work. See https://forums.developer.nvidia.com/t/initrd-flashing-for-orin-nano-super-developer-kit/318874/3
-    # This is the command in the official documentation, but after rebooting into the minimal system,
-    # USB networking never becomes available?
     sudo bash ./tools/kernel_flash/l4t_initrd_flash.sh \
         --external-device nvme0n1p1 \
         -p "-c ./bootloader/generic/cfg/flash_t234_qspi.xml" \
         -c ./tools/kernel_flash/flash_l4t_t234_nvme.xml \
         --showlogs \
         --network usb0 \
-        jetson-orin-nano-devkit external
+        jetson-orin-nano-devkit-super external
 
     popd
 }
@@ -92,9 +90,9 @@ if [ ${clean} == 1 ]; then
     exit 0
 fi
 
-echo ${download}
-echo ${rootfs}
-echo ${flash}
+echo "Download" ${download}
+echo "Rootfs" ${rootfs}
+echo "Flash" ${flash}
 
 if [ ${download} == 1 ]; then
     do_download
